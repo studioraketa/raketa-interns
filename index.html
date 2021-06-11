@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Tik Tak Toe</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="index.css" />
+    <script src="gameWinner.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1 class="text-center">Tik Tak Toe</h1>
+
+      <div class="board">
+        <div class="row">
+          <div class="box" data-order="0-0"></div>
+          <div class="box" data-order="0-1"></div>
+          <div class="box" data-order="0-2"></div>
+        </div>
+        <div class="row">
+          <div class="box" data-order="1-0"></div>
+          <div class="box" data-order="1-1"></div>
+          <div class="box" data-order="1-2"></div>
+        </div>
+        <div class="row">
+          <div class="box" data-order="2-0"></div>
+          <div class="box" data-order="2-1"></div>
+          <div class="box" data-order="2-2"></div>
+        </div>
+      </div>
+
+      <p id="player"></p>
+      <button id="reset" class="hidden">Reset</button>
+    </div>
+
+    <script>
+      let board;
+      let player;
+      let gameOver;
+
+      const updateMessage = (message) =>
+        (document.getElementById("player").innerHTML = message);
+
+      const gameTick = (event) => {
+        const box = event.target;
+
+        const [row, col] = box.dataset.order
+          .split("-")
+          .map((el) => parseInt(el));
+
+        if (board[row][col] || gameOver) {
+          return;
+        }
+
+        board[row][col] = player;
+        box.classList.add(player);
+
+        switch (gameWinner(board)) {
+          case "x":
+          case "o":
+            gameOver = true;
+            document.getElementById("reset").classList.remove("hidden");
+            updateMessage(
+              `Player <strong>${player.toUpperCase()}</strong> won!`
+            );
+            break;
+          case "draw":
+            gameOver = true;
+            document.getElementById("reset").classList.remove("hidden");
+            updateMessage(`The game is a draw!`);
+            break;
+          default:
+            player = player === "x" ? "o" : "x";
+            updateMessage(
+              `Next player is <strong>${player.toUpperCase()}</strong>`
+            );
+        }
+      };
+
+      const InitGameState = () => {
+        board = [
+          [0, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0],
+        ];
+
+        player = "x";
+        gameOver = false;
+
+        updateMessage(
+          `Next player is <strong>${player.toUpperCase()}</strong>`
+        );
+      };
+
+      const addEvents = () => {
+        document.querySelectorAll(".box").forEach((box) => {
+          box.addEventListener("click", gameTick);
+        });
+
+        document.getElementById("reset").addEventListener("click", (event) => {
+          InitGameState();
+          event.target.classList.add("hidden");
+
+          document.querySelectorAll(".box").forEach((box) => {
+            box.classList.remove("o");
+            box.classList.remove("x");
+          });
+        });
+      };
+
+      InitGameState();
+      addEvents();
+    </script>
+  </body>
+</html>
