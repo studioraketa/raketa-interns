@@ -1,6 +1,6 @@
-# Tik Tak Toe
+# Tik Tac Toe
 
-This repository holds a very simple implementation of the `Tik Tak Toe` game.
+This repository holds a very simple implementation of the `Tik Tac Toe` game.
 
 The game has a bug - it does not recognise when it is over and who wins.
 
